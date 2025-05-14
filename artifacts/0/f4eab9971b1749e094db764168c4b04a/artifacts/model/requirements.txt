@@ -1,0 +1,6 @@
+mlflow==2.20.2
+scikit-learn==1.6.1
+pandas
+numpy
+keras==3.8.0
+tensorflow==2.18.0

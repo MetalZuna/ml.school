@@ -1,0 +1,38 @@
+artifact_path: model
+flavors:
+  python_function:
+    artifacts:
+      features_transformer:
+        path: artifacts/features.joblib
+        uri: /tmp/tmpxt00sy8z/features.joblib
+      model:
+        path: artifacts/model.keras
+        uri: /tmp/tmpxt00sy8z/model.keras
+      target_transformer:
+        path: artifacts/target.joblib
+        uri: /tmp/tmpxt00sy8z/target.joblib
+    cloudpickle_version: 3.1.1
+    code: code
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pyfunc.loaders.code_model
+    model_code_path: /home/mz/projects/ml.school/pipelines/inference/model.py
+    python_version: 3.12.8
+    streamable: false
+is_signature_from_type_hint: true
+mlflow_version: 2.20.2
+model_size_bytes: 37170
+model_uuid: 8dbc11b252a543bab0760a526e9abbda
+run_id: f4eab9971b1749e094db764168c4b04a
+signature:
+  inputs: '[{"type": "object", "properties": {"body_mass_g": {"type": "double", "required":
+    false}, "culmen_depth_mm": {"type": "double", "required": false}, "culmen_length_mm":
+    {"type": "double", "required": false}, "flipper_length_mm": {"type": "double",
+    "required": false}, "island": {"type": "string", "required": false}, "sex": {"type":
+    "string", "required": false}}, "required": true}]'
+  outputs: '[{"type": "object", "properties": {"confidence": {"type": "double", "required":
+    false}, "prediction": {"type": "string", "required": false}}, "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-05-06 21:04:29.144480'

@@ -1,45 +1,61 @@
-from metaflow import FlowSpec, step
+from metaflow import FlowSpec, step, Parameter
+
+ADD_CONST  = 3   # branch-1 will add this
+MULT_CONST = 2   # branch-2 will multiply by this
 
 
 class Branches(FlowSpec):
-    """A flow that showcases how branches work."""
+    """
+    Initialise a number → split into two branches
+    (add, multiply) → join → show both results and their sum.
+    """
+
+    # Let users override the starting value on the CLI.
+    start_value = Parameter("start_value", default=1, type=int)
 
     @step
     def start(self):
-        """Initialize the start value artifact."""
-        self.start_value = 0
-        self.next(self.step1, self.step2)
+        """Seed the number and branch out."""
+        self.x = self.start_value
+        self.next(self.add_branch, self.mult_branch)
 
     @step
-    def step1(self):
-        """Assign a value to an artifact."""
-        print("Executing Step 1")
-        self.common = 1
+    def add_branch(self):
+        """Add a constant to x."""
+        self.add_result = self.x + ADD_CONST
         self.next(self.join)
 
     @step
-    def step2(self):
-        """Assign a value to an artifact."""
-        print("Executing Step 2")
-        self.common = 2
+    def mult_branch(self):
+        """Multiply x by a constant."""
+        self.mult_result = self.x * MULT_CONST
         self.next(self.join)
 
     @step
     def join(self, inputs):
-        """Join the two branches."""
-        self.merge_artifacts(inputs, exclude=["common"])
+        """Merge the two branches and compute the total."""
+        # Pull in the non-conflicting artifacts automatically
+        self.merge_artifacts(inputs)
 
-        print("Step 1's artifact value:", inputs.step1.common)
-        print("Step 2's artifact value:", inputs.step2.common)
+        add_val  = inputs.add_branch.add_result
+        mult_val = inputs.mult_branch.mult_result
+        total    = add_val + mult_val
 
-        self.final_value = sum(i.common for i in inputs)
+        print("\n--- Branch outcomes ---")
+        print(f"Add  branch result : {add_val}")
+        print(f"Mult branch result : {mult_val}")
+        print(f"Sum of both        : {total}")
+        print("-----------------------\n")
+
+        # Persist for downstream use / inspection
+        self.sum_of_results = total
         self.next(self.end)
 
     @step
     def end(self):
-        """Print the final artifact values."""
-        print("Start value:", self.start_value)
-        print("Final value:", self.final_value)
+        """Show a concise recap."""
+        print(f"Start value : {self.x}")
+        print(f"Final sum   : {self.sum_of_results}")
 
 
 if __name__ == "__main__":
